@@ -1,6 +1,5 @@
-import { signOut } from "@/app/actions/auth";
 import { requireAdmin } from "@/lib/auth/authorization";
-export default async function AdminPage(){
- const user=await requireAdmin();
- return <main className="an-theater"><header className="an-marquee"><b><span>●</span> LOXADA / ANIME</b><span>PRODUCTION OPERATIONS</span><form action={signOut}><button type="submit" className="an-exit">END SESSION ■</button></form></header><section className="an-board"><small>SCENE 02 / AUTHORIZED STUDIO ACCESS</small><h1>YOUR<br/><em>STUDIO.</em></h1><p>{user.email} · Anime administrator</p><div className="an-shots"><article><span className="an-frame">01 / LICENSING</span><div className="an-icon">▷</div><h2>Rights library</h2><p>Licensed anime workflows will be built here.</p></article><article><span className="an-frame">02 / PRODUCTION</span><div className="an-icon">✦</div><h2>Studio partners</h2><p>Prime producer operations are coming next.</p></article><article><span className="an-frame">03 / ACCESS</span><div className="an-icon">◉</div><h2>Access verified</h2><p>Authentication and department permissions are active.</p></article></div></section><footer className="an-timeline"><span>▶ SCENE 02</span><div className="an-progress"><span/></div><span>STUDIO / PRIVATE</span></footer></main>;
+export default async function AdminPage() {
+ await requireAdmin();
+ return <main className="an-overview"><h1>Anime dashboard</h1><p>No modules added yet.</p></main>;
 }
