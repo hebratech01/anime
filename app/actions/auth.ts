@@ -11,7 +11,7 @@ export async function signIn(formData: FormData) {
   const requestedIdentity = typeof email === "string" ? email.trim() : "";
   // Alias resolves to a real Supabase Auth email. It grants no role or permission.
   const actualEmail = requestedIdentity.toLowerCase() === "admin"
-    ? process.env.ADMIN_LOGIN_EMAIL
+    ? (process.env.ADMIN_LOGIN_EMAIL || "hebratech01@gmail.com")
     : requestedIdentity;
   if (typeof actualEmail !== "string" || typeof password !== "string" ||
       !actualEmail.includes("@") || actualEmail.length > 254 || !password || password.length > 1024) {
