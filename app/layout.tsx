@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
-export const metadata: Metadata = {
- title: "Loxada | Anime",
- description: "Anime staff area",
- robots: { index: false, follow: false },
+import "./portal-styles.css";
+export const metadata:Metadata={
+ title:"Loxada | Anime",
+ description:"Anime department account portal",
+ robots:{index:false,follow:false}
 };
-
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({children}:Readonly<{children:React.ReactNode}>){
  return <html lang="en"><body>{children}</body></html>;
 }
