@@ -35,3 +35,11 @@ The department administrator uses /admin/accounts to search and filter customer 
 - Suspended users cannot open the department portal or submit or read supplier applications through the Data API. Supplier decisions are preserved by suspension.
 - Recovery emails require configured Supabase Auth email delivery and permitted redirects to /set-password. Administrators never see user passwords.
 - SUPABASE_SECRET_KEY stays server-only.
+
+## Account interface and terminology (V1)
+- UX identity: cinematic audience-and-production console; subscriber signup and a partner application space.
+- Use **Subscriber**, **Anime licensing partner**, and **Lead production company**.
+- Subscriber signup is not a paid subscription or streaming-entitlement purchase. Licensor and lead production accounts are invited by admins.
+- Lead production companies coordinate subcontractors and studios; they are not internal staff or automatically a copyright holder.
+- Partner verification does not establish streaming rights, authorize production or grant catalog access.
+- The account pages, registration, and portals have independent Anime-specific layouts, not shared Manga/Merch templates.
