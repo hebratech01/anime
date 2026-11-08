@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {signOut} from "@/app/actions/auth";
 import {submitSupplierApplication} from "@/app/actions/onboarding";
 import {requirePortal} from "@/lib/auth/authorization";
@@ -17,7 +18,8 @@ export default async function AnimePortal({searchParams}:{searchParams:Promise<{
  const role=type==="licensor"?"Anime licensing partner":type==="prime_producer"?"Lead production company":"Subscriber";
  return <main className="an-customer-portal"><div className="an-portal-wrap">
   <header className="an-portal-head"><strong>LOXADA / ANIME</strong><form action={signOut}><button type="submit">Sign out</button></form></header>
-  <section className="an-portal-hero"><span className="an-console-overline">{supplier?"PRODUCTION & RIGHTS / PARTNER PORTAL":"SUBSCRIBER PORTAL"}</span>
+  <section className="an-portal-hero">
+   {supplier&&<Link className="sr-portal-message-link" href="/portal/messages">Messages with the Anime team</Link>}<span className="an-console-overline">{supplier?"PRODUCTION & RIGHTS / PARTNER PORTAL":"SUBSCRIBER PORTAL"}</span>
    <h1>{supplier?"Partner account":"Welcome, "+account.display_name}</h1>
    <p>{supplier?"Provide your company details for review. A verified application alone does not grant streaming rights or authorize any production work.":"Your subscriber profile is ready. Streaming plans, billing and a rights-cleared catalog are separate services that are not available on this temporary account page."}</p>
   </section>
