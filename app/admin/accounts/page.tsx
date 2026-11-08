@@ -74,7 +74,7 @@ export default async function AnimePeople({searchParams}:{searchParams:Promise<R
       <Link href={"/admin/accounts/"+req.user_id} className="an-rail-link">View partner account</Link>
       <form className="an-rail-form" action={reviewSupplier}>
        <input type="hidden" name="application_id" value={req.id}/>
-       <label>Review decision<select name="status" defaultValue="needs_info">
+       <label>Review decision<select name="status" defaultValue="" required><option value="" disabled>Choose a decision</option>
         <option value="verified">Verify applicant</option><option value="needs_info">Request more details</option>
         <option value="rejected">Decline application</option><option value="suspended">Suspend application</option>
        </select></label>
