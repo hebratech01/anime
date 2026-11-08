@@ -1,46 +1,55 @@
-import Link from "next/link";
 import {signOut} from "@/app/actions/auth";
 import {submitSupplierApplication} from "@/app/actions/onboarding";
 import {requirePortal} from "@/lib/auth/authorization";
-import {accountLabels,departmentId,departmentName,isSupplier} from "@/lib/portal/config";
-const errors:Record<string,string>={unauthorized:"This account cannot apply as a supplier.",invalid:"Check your application details and confirmation.",database:"The application could not be saved.",locked:"This application is already under review."};
-const notes:Record<string,string>={submitted:"Your application information was saved. An administrator will review it."};
-export default async function Portal({searchParams}:{searchParams:Promise<{error?:string;notice?:string}>}) {
+import {isSupplier} from "@/lib/portal/config";
+
+const states:Record<string,string>={pending:"Submitted for review",needs_info:"More information requested",verified:"Applicant verified",rejected:"Application declined",suspended:"Application suspended"};
+const errors:Record<string,string>={unauthorized:"This account cannot apply as a partner.",invalid:"Please check the application details.",database:"Could not save the application.",locked:"This application is already under review."};
+export default async function AnimePortal({searchParams}:{searchParams:Promise<{error?:string;notice?:string}>}){
  const {user,account,db}=await requirePortal();
- const params=await searchParams;
- const supplier=isSupplier(account.account_type);
- const {data:application,error:appError}=supplier
-  ? await db.from("supplier_applications").select("id,status,legal_name,organization_name,contact_email,capability_statement,reviewer_feedback,updated_at").eq("user_id",user.id).maybeSingle()
+ const p=await searchParams;
+ const type=account.account_type;
+ const supplier=isSupplier(type);
+ const {data:app,error:appError}=supplier
+  ? await db.from("supplier_applications").select("status,legal_name,organization_name,contact_email,capability_statement,reviewer_feedback").eq("user_id",user.id).maybeSingle()
   : {data:null,error:null};
- const editable=supplier && (!application || application.status==="needs_info");
- return <main className="portal-screen" data-brand={departmentId}>
-  <div className="portal-card portal-wide">
-   <header className="portal-top"><span className="portal-eyebrow">LOXADA / {departmentName}</span><form action={signOut}><button className="portal-outline" type="submit">Log out</button></form></header>
-   <h1>{account.display_name}</h1>
-   <p className="portal-account-type">{accountLabels[account.account_type]??"Account"} account · {user.email}</p>
-   {params.error&&<p className="portal-alert" role="alert">{errors[params.error]??"Unable to complete request."}</p>}
-   {params.notice&&<p className="portal-notice" role="status">{notes[params.notice]??""}</p>}
-   {appError&&<p className="portal-alert">Could not load the supplier application.</p>}
-   {!supplier
-    ? <section className="portal-section"><h2>Account ready</h2><p>Your department account is active. The {accountLabels[account.account_type]?.toLowerCase()} business features will appear here when implemented; no sample purchases, subscriptions or reading records have been created.</p></section>
-    : <section className="portal-section"><h2>Supplier application</h2>
-      <p>Application review is separate from legal rights clearance, content approval and financial authorization.</p>
-      {application&&<div className="portal-status"><strong>Status: {application.status.replaceAll("_"," ")}</strong>
-      {application.reviewer_feedback&&<p>Reviewer feedback: {application.reviewer_feedback}</p>}</div>}
-      {editable&&<form className="portal-application-form" action={submitSupplierApplication}>
-       <label htmlFor="legal-name">Legal name / authorized representative</label>
-       <input id="legal-name" name="legal_name" minLength={2} maxLength={160} defaultValue={application?.legal_name??""} required/>
-       <label htmlFor="org-name">Organization name (if applicable)</label>
-       <input id="org-name" name="organization_name" minLength={2} maxLength={160} defaultValue={application?.organization_name??""}/>
-       <label htmlFor="contact-email">Business contact email</label>
-       <input id="contact-email" name="contact_email" type="email" maxLength={254} defaultValue={application?.contact_email??user.email??""} required/>
-       <label htmlFor="capability-statement">Explain your supplier role, relevant ownership or authorization, and what you intend to supply</label>
-       <textarea id="capability-statement" name="capability_statement" minLength={20} maxLength={3000} rows={5} defaultValue={application?.capability_statement??""} required/>
-       <label className="portal-check"><input type="checkbox" name="affirmed" required/> I confirm these details are accurate and understand that evidence may be requested during review.</label>
-       <button className="portal-primary" type="submit">{application?"Save requested information":"Submit application"}</button>
-      </form>}
-     </section>}
-   <p className="portal-hint"><Link className="portal-inline-link" href="/login">Account sign-in</Link></p>
+ const editable=supplier&&(!app||app.status==="needs_info");
+ const role=type==="licensor"?"Anime licensing partner":type==="prime_producer"?"Lead production company":"Subscriber";
+ return <main className="an-customer-portal"><div className="an-portal-wrap">
+  <header className="an-portal-head"><strong>LOXADA / ANIME</strong><form action={signOut}><button type="submit">Sign out</button></form></header>
+  <section className="an-portal-hero"><span className="an-console-overline">{supplier?"PRODUCTION & RIGHTS / PARTNER PORTAL":"SUBSCRIBER PORTAL"}</span>
+   <h1>{supplier?"Partner account":"Welcome, "+account.display_name}</h1>
+   <p>{supplier?"Provide your company details for review. A verified application alone does not grant streaming rights or authorize any production work.":"Your subscriber profile is ready. Streaming plans, billing and a rights-cleared catalog are separate services that are not available on this temporary account page."}</p>
+  </section>
+  {p.error&&<p className="an-console-message" role="alert">{errors[p.error]??"Unable to complete request."}</p>}
+  {p.notice==="submitted"&&<p className="an-console-message" role="status">Application sent for partner review.</p>}
+  {appError&&<p className="an-console-message" role="alert">Could not load the partner application.</p>}
+  <div className="an-portal-grid">
+   <section className="an-portal-panel">
+    {supplier
+     ? <><h2>{type==="licensor"?"Streaming license application":"Lead producer application"}</h2>
+       <p>{type==="licensor"?"For organizations offering licensed anime and streaming distribution rights.":"For lead production companies coordinating studios and delivering commissioned anime."}</p>
+       {app&&<p className="an-status-note">Status: {states[app.status]??app.status}</p>}
+       {app?.reviewer_feedback&&<p>Reviewer feedback: {app.reviewer_feedback}</p>}
+       {editable
+        ? <form action={submitSupplierApplication}>
+          <label>Authorized contact name<input name="legal_name" minLength={2} maxLength={160} defaultValue={app?.legal_name??""} required/></label>
+          <label>Company name (if applicable)<input name="organization_name" minLength={2} maxLength={160} defaultValue={app?.organization_name??""}/></label>
+          <label>Contact email<input name="contact_email" type="email" maxLength={254} defaultValue={app?.contact_email??user.email??""} required/></label>
+          <label>{type==="licensor"?"Describe the anime rights or catalog your company represents":"Describe the production services and coordination your company offers"}
+           <textarea name="capability_statement" rows={5} minLength={20} maxLength={3000} defaultValue={app?.capability_statement??""} required/></label>
+          <label className="an-portal-check"><input type="checkbox" name="affirmed" required/> These details are accurate. I understand that supporting evidence may be requested.</label>
+          <button type="submit">{app?"Resubmit details":"Submit partner application"}</button>
+         </form>
+        : <p>Your application is not editable at its current review stage.</p>}
+       </>
+     : <><h2>Your subscriber profile</h2><p>Your account is active and separate from Manga readers and Merchandise buyers.</p>
+        <p>No subscription plan has been purchased or activated by creating this account.</p></>}
+   </section>
+   <aside className="an-portal-panel an-portal-meta"><span className="an-console-overline">ACCOUNT</span>
+    <h2>{account.display_name}</h2><p>{role}</p><p>{user.email}</p>
+    <p>{supplier?"Partner verification comes first. Rights clearance, signed contracts and content acceptance are separate.":"You can use this account to sign in. Subscription billing and playback will be added when available."}</p>
+   </aside>
   </div>
- </main>;
+ </div></main>;
 }
