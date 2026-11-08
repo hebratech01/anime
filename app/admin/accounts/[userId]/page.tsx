@@ -37,7 +37,7 @@ export default async function AnimeAccount({params,searchParams}:{params:Promise
      <p>{application.legal_name} · {reviews[application.status]??application.status}</p>
      {application.reviewer_feedback&&<p>Review notes: {application.reviewer_feedback}</p>}
      <p className="an-member-muted">Partner verification does not approve streaming rights or authorize production work.</p>
-     <Link href="/admin/accounts" className="an-rail-link">Open partner review queue</Link>
+     <Link href="/admin/onboarding" className="an-rail-link">Open partner review queue</Link>
     </div>}
     <div className="an-member-panel"><h2>Account activity</h2>
      {!history.length&&<p>No account changes have been recorded.</p>}
