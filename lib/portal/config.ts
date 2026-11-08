@@ -9,8 +9,8 @@ export const accountLabels: Record<string, string> = {
   "creator": "Author / Creator",
   "publisher": "Publisher",
   "subscriber": "Subscriber",
-  "licensor": "Licensor / Distributor",
-  "prime_producer": "Prime Producer",
+  "licensor": "Anime licensing partner",
+  "prime_producer": "Lead production company",
   "buyer": "Buyer",
   "wholesaler": "Wholesaler",
   "manufacturer": "Manufacturer"
