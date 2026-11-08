@@ -1,34 +1,29 @@
 import Link from "next/link";
 import {register} from "@/app/actions/auth";
-import {accountLabels,customerType,departmentId,departmentName,selfSignupTypes} from "@/lib/portal/config";
 import NewPasswordFields from "./password-fields";
-const errors:Record<string,string>={
- invalid:"Check the form fields, password confirmation and minimum 12-character password.",
- failed:"Account registration could not be completed. Please check the details or try again.",
- configuration:"Registration is not configured."
-};
-export default async function Registration({searchParams}:{searchParams:Promise<{error?:string}>}) {
+
+const errors:Record<string,string>={invalid:"Check the form and use matching passwords of at least 12 characters.",failed:"We could not create the account. Check the details and try again.",configuration:"Registration is unavailable."};
+export default async function SubscribeRegistration({searchParams}:{searchParams:Promise<{error?:string}>}){
  const {error}=await searchParams;
- return <main className="portal-screen" data-brand={departmentId}>
-  <div className="portal-card portal-form-card">
-   <div className="portal-eyebrow">LOXADA / {departmentName}</div>
-   <h1>Create account</h1>
-   <p>Start with basic sign-in details. Supplier applications are completed inside the portal.</p>
-   {error&&<p className="portal-alert" role="alert">{errors[error]??errors.failed}</p>}
+ return <main className="an-register">
+  <section className="an-register-feature"><span className="an-console-overline">LOXADA / ANIME</span>
+   <h1>Your anime space.</h1>
+   <p>Create a subscriber account for our future streaming service. Subscription plans and access to individual titles will be handled separately once available.</p>
+   <p className="an-feature-caption">Subscriber signup · Production partners join by invitation</p>
+  </section>
+  <section className="an-register-form">
+   <span className="an-console-overline">AUDIENCE ACCESS</span><h2>Create subscriber account</h2>
+   <p>A few details to get started. You may need to confirm your email before signing in.</p>
+   {error&&<p className="an-console-message" role="alert">{errors[error]??errors.failed}</p>}
    <form action={register}>
-    <label htmlFor="account-display-name">Display name</label>
-    <input id="account-display-name" name="display_name" autoComplete="name" maxLength={80} minLength={2} required/>
-    <label htmlFor="account-email">Email</label>
-    <input id="account-email" name="email" type="email" autoComplete="email" maxLength={254} required/>
-    {selfSignupTypes.length>1
-     ? <><label htmlFor="account-type">Register as</label>
-        <select name="account_type" id="account-type" required>{selfSignupTypes.map(t=><option key={t} value={t}>{accountLabels[t]}</option>)}</select></>
-     : <input type="hidden" name="account_type" value={customerType}/>}
+    <input type="hidden" name="account_type" value="subscriber"/>
+    <label htmlFor="an-name">Your display name<input id="an-name" name="display_name" autoComplete="name" minLength={2} maxLength={80} required/></label>
+    <label htmlFor="an-email">Email address<input id="an-email" name="email" type="email" autoComplete="email" maxLength={254} required/></label>
     <NewPasswordFields/>
-    <button className="portal-primary" type="submit">Create account</button>
+    <button type="submit">Create subscriber account</button>
    </form>
-   <p className="portal-hint">Account creation does not grant content publishing, licensing or purchasing authority to a supplier. Email verification may be required.</p>
-   <Link className="portal-inline-link" href="/login">Already registered? Sign in</Link>
-  </div>
+   <p>Creating an account does not start a paid subscription.</p>
+   <Link href="/login">Already have an account? Sign in</Link>
+  </section>
  </main>;
 }
