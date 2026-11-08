@@ -1,3 +1,4 @@
+import SubmitButton from "@/app/admin/components/submit-button";
 import Form from "next/form";
 import Link from "next/link";
 import {loadDirectory,directoryUrl} from "@/lib/admin/directory";
@@ -30,7 +31,7 @@ export default async function AnimePeople({searchParams}:{searchParams:Promise<R
      <label>Sign-in access<select name="status" defaultValue={d.status}>
       <option value="all">All accounts</option><option value="active">Allowed</option><option value="suspended">Suspended</option>
      </select></label>
-     <button type="submit">Search</button>
+     <SubmitButton label="Search" pendingLabel="Searching..."/>
     </Form>
     <div className="an-person-list">{d.people.map(person=><article className="an-person" key={person.user_id}>
      <div className="an-person-mark" aria-hidden="true">{person.display_name.slice(0,1).toUpperCase()}</div>
