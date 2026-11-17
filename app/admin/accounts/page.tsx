@@ -1,6 +1,7 @@
 import SubmitButton from "@/app/admin/components/submit-button";
 import Form from "next/form";
 import Link from "next/link";
+import {accountLabels} from "@/lib/portal/config";
 import {loadDirectory,directoryUrl} from "@/lib/admin/directory";
 
 const notices:Record<string,string>={invited:"Supplier invitation sent.",reviewed:"Supplier application updated."};
@@ -16,17 +17,23 @@ export default async function AnimePeople({searchParams}:{searchParams:Promise<R
     <p>Find subscribers, anime rights suppliers, and lead production companies. Manage sign-in access and password recovery.</p></div>
    <div className="an-console-counter"><strong>{d.total}</strong><span>accounts in this view</span></div>
   </header>
+  <div className="ac-account-filter"><Link className="sr-link" href="/admin/supplier-activity/accounts">Account Analysis →</Link>
+   {d.period||d.roles.length?<><span>Cube filters: {[d.period&&("Registered "+d.period),d.roles.map(role=>accountLabels[role]??role).join(", ")].filter(Boolean).join(" · ")}</span>
+    <Link className="sr-link" href={directoryUrl({...d,period:"",roles:[]},1)}>Clear cube filters</Link></>:null}
+  </div>
   {d.error&&<p role="alert" className="an-console-message">{d.error}</p>}
   {p.error&&<p role="alert" className="an-console-message">{errors[p.error]??"Could not finish that request."}</p>}
   {p.notice&&<p role="status" className="an-console-message">{notices[p.notice]??""}</p>}
   <div className="an-console-tabs" role="navigation" aria-label="Choose account category">
-   {types.map(([key,label])=><Link key={key} href={directoryUrl({...d,role:key},1)} aria-current={d.role===key?"page":undefined}>{label}</Link>)}
+   {types.map(([key,label])=><Link key={key} href={directoryUrl({...d,role:key,roles:[]},1)} aria-current={d.role===key&&!d.roles.length?"page":undefined}>{label}</Link>)}
   </div>
   <div className="an-console-grid an-account-only">
    <section className="an-people-stage">
     <header><h2>Accounts</h2><span>Showing page {d.page} of {d.pages}</span></header>
     <Form className="an-controls" action="/admin/accounts">
      <input type="hidden" name="role" value={d.role}/>
+     {d.roles.length?<input type="hidden" name="roles" value={d.roles.join(",")}/>:null}
+     {d.period?<input type="hidden" name="period" value={d.period}/>:null}
      <label>Search by name<input type="search" name="q" defaultValue={d.q} placeholder="Find an account" maxLength={60}/></label>
      <label>Sign-in access<select name="status" defaultValue={d.status}>
       <option value="all">All accounts</option><option value="active">Allowed</option><option value="suspended">Suspended</option>
