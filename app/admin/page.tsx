@@ -6,5 +6,6 @@ export default async function AdminHome(){
  <section className="an-people-stage" style={{marginTop:18}}><h2>Account Access</h2><p>Find subscribers, anime rights suppliers, and lead production companies. Manage sign-in, suspensions, and password recovery.</p><Link className="an-rail-link" href="/admin/accounts">Manage account access →</Link></section>
  <section className="an-people-stage" style={{marginTop:18}}><h2>Supplier Invitations &amp; Messages</h2><p>Send invitations, check whether suppliers accepted, and open private conversations.</p><Link className="an-rail-link" href="/admin/relations">Open invitations and messages →</Link></section>
  <section className="an-people-stage" style={{marginTop:18}}><h2>Supplier Applications</h2><p>Review submitted supplier information and record a verification decision.</p><Link className="an-rail-link" href="/admin/onboarding">Review supplier applications →</Link></section>
+ <section className="an-people-stage" style={{marginTop:18}}><h2>Supplier Activity</h2><p>See which invitations need follow-up, which applications are waiting, and which accounts are suspended.</p><Link className="an-rail-link" href="/admin/supplier-activity">Open supplier activity report →</Link></section>
  </main>;
 }
