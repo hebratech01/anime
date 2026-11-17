@@ -2,7 +2,7 @@ import Link from "next/link";
 import {loadAccount} from "@/lib/admin/account-detail";
 import {renameAccount,setAccountStatus,sendRecoveryEmail} from "@/app/actions/admin-account-controls";
 
-const roles:Record<string,string>={subscriber:"Subscriber",licensor:"Anime licensing partner",prime_producer:"Lead production company"};
+const roles:Record<string,string>={subscriber:"Subscriber",licensor:"Anime rights supplier",prime_producer:"Lead production company"};
 const messages:Record<string,string>={renamed:"Display name saved.",unchanged:"No changes made.",suspended:"Sign-in access suspended.",reactivated:"Sign-in access restored.",recovery:"Password recovery email requested.",recovery_unlogged:"Recovery email requested, but the activity record was not saved."};
 const errors:Record<string,string>={invalid:"Check the display name.",changed:"Account changed. Refresh and review its current state.",reason:"Enter a reason of 8–500 characters and confirm.",configuration:"Email recovery is not configured.",database:"Could not save changes.",email:"Could not send recovery email.",cooldown:"A recovery email was sent recently."};
 const reviews:Record<string,string>={pending:"Awaiting review",needs_info:"More information needed",verified:"Applicant verified",rejected:"Declined",suspended:"Application suspended"};
@@ -11,7 +11,7 @@ export default async function AnimeAccount({params,searchParams}:{params:Promise
  const {account,authUser,history,application}=await loadAccount(userId);
  const p=await searchParams;
  return <main className="an-member">
-  <Link className="an-back-link" href="/admin/accounts">← Audience &amp; partners</Link>
+  <Link className="an-back-link" href="/admin/accounts">← Back to Account Access</Link>
   <header className="an-member-hero"><div>
    <span className="an-console-overline">ANIME / ACCOUNT PROFILE</span>
    <h1>{account.display_name}</h1><p>{roles[account.account_type]??account.account_type}</p>
@@ -33,11 +33,11 @@ export default async function AnimeAccount({params,searchParams}:{params:Promise
       <button type="submit">Save name</button>
      </form>
     </div>
-    {application&&<div className="an-member-panel"><h2>Partner application</h2>
+    {application&&<div className="an-member-panel"><h2>Supplier application</h2>
      <p>{application.legal_name} · {reviews[application.status]??application.status}</p>
      {application.reviewer_feedback&&<p>Review notes: {application.reviewer_feedback}</p>}
-     <p className="an-member-muted">Partner verification does not approve streaming rights or authorize production work.</p>
-     <Link href="/admin/onboarding" className="an-rail-link">Open partner review queue</Link>
+     <p className="an-member-muted">Supplier verification does not approve streaming rights or authorize production work.</p>
+     <Link href="/admin/onboarding" className="an-rail-link">Review supplier applications</Link>
     </div>}
     <div className="an-member-panel"><h2>Account activity</h2>
      {!history.length&&<p>No account changes have been recorded.</p>}

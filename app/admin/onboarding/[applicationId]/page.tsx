@@ -10,11 +10,11 @@ export default async function ReviewApplication({params,searchParams}:{params:Pr
  const {application,account}=await loadApplication(applicationId);
  const p=await searchParams;
  return <main className="an-console">
-  <Link className="an-rail-link" href="/admin/onboarding">← Back to applications</Link>
+  <Link className="an-rail-link" href="/admin/onboarding">← Back to Supplier Applications</Link>
   <header className="an-console-intro" style={{marginTop:18}}>
    <div><span className="an-console-overline">ANIME / APPLICATION REVIEW</span>
     <h1>{application.legal_name}</h1>
-    <p>Production or licensing partner · {labels[application.status]??application.status}</p></div>
+    <p>{account?accountLabels[account.account_type]??"Supplier":"Supplier"} · {labels[application.status]??application.status}</p></div>
   </header>
   {p.error&&<p className="an-console-message" role="alert">{errors[p.error]??"This application could not be updated."}</p>}
   {p.notice==="reviewed"&&<p className="an-console-message" role="status">Review decision saved.</p>}
@@ -30,12 +30,12 @@ export default async function ReviewApplication({params,searchParams}:{params:Pr
    {application.reviewer_feedback&&<p><strong>Previous feedback:</strong> {application.reviewer_feedback}</p>}
    <p>Verifying an applicant is separate from approving licenses, contracts, products, or content.</p>
    <div className="admin-work-actions">
-    <Link className="an-rail-link" href={"/admin/accounts/"+application.user_id}>View account access</Link>
+    <Link className="an-rail-link" href={"/admin/accounts/"+application.user_id}>Manage account access</Link>
    </div>
   </section>
   <section className="an-people-stage admin-work-detail" style={{marginTop:18}}>
-   <h2>Review partner</h2>
-   <p>Choose a decision and provide clear feedback. A verification does not grant business or staff permissions.</p>
+   <h2>Review application</h2>
+   <p>Choose a decision on this application. This does not change the supplier’s sign-in access or approve any business terms.</p>
    <form className="admin-work-review" action={reviewSupplier}>
     <input type="hidden" name="application_id" value={application.id}/>
     <input type="hidden" name="expected_status" value={application.status}/>
