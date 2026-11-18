@@ -12,7 +12,6 @@ export default async function OnboardingQueue({searchParams}:{searchParams:Promi
    <div><span className="an-console-overline">ANIME / APPLICATIONS</span>
     <h1>Supplier Applications</h1>
     <p>Review applications submitted by anime rights suppliers and lead production companies. Request missing information or record a verification decision.</p></div>
-   <Link className="an-rail-link" href="/admin/relations">Supplier Invitations &amp; Messages</Link>
   </header>
   {d.error&&<p className="an-console-message" role="alert">{d.error}</p>}
   {p.notice&&<p className="an-console-message" role="status">{notices[p.notice]??""}</p>}

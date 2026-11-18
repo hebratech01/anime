@@ -1,5 +1,4 @@
-import SectionLinks from "@/app/admin/components/section-links";
-import Link from "next/link";
+import SectionLinks, { SupplierTabs } from "@/app/admin/components/section-links";
 import { requireAdmin } from "@/lib/auth/authorization";
 import { signOut } from "@/app/actions/auth";
 export default async function AnimeLayout({children}:{children:React.ReactNode}) {
@@ -9,7 +8,7 @@ export default async function AnimeLayout({children}:{children:React.ReactNode})
    <header className="an-app-top"><strong>LOXADA <span>/ ANIME</span></strong>
      <div className="an-user"><div><b title={user.email}>{username}</b><small>Department Admin</small></div><form action={signOut}><button type="submit">Log out</button></form></div>
    </header>
-   <nav className="an-app-nav" aria-label="Anime navigation"><SectionLinks items={[{href:"/admin",label:"Control room"},{href:"/admin/accounts",label:"Account Access"},{href:"/admin/relations",label:"Supplier Invitations & Messages"},{href:"/admin/onboarding",label:"Supplier Applications"},{href:"/admin/supplier-activity",label:"Supplier Activity"}]}/></nav>
-   <section className="an-app-children">{children}</section>
+   <nav className="an-app-nav" aria-label="Anime navigation"><SectionLinks homeLabel="Control room"/></nav>
+   <section className="an-app-children"><SupplierTabs/>{children}</section>
  </div>;
 }
