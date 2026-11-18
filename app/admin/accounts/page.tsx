@@ -23,9 +23,9 @@ export default async function AnimePeople({searchParams}:{searchParams:Promise<C
   <header className="an-console-intro">
    <div><span className="an-console-overline">LOXADA ANIME · ADMIN</span><h1>Account Access</h1>
     <p>Find subscribers, anime rights suppliers, and lead production companies. Manage sign-in access and password recovery.</p></div>
-   <div className="an-console-counter"><strong>{d.total}</strong><span>accounts in this view</span></div>
+   <div className="an-console-counter"><strong>{d.error?"—":d.total}</strong><span>{d.error?"count unavailable":"accounts in this view"}</span></div>
   </header>
-  <AccountAnalysis view={view} cells={cells} listUrl={listUrl}/>
+  <AccountAnalysis view={view} cells={cells} listUrl={listUrl} checkedAt={cells===null?null:new Date().toISOString()}/>
   <div id="account-records" tabIndex={-1}>
   {listFilters.length?<div className="ac-account-filter"><span>Account list filters: {listFilters.join(" · ")}</span>
    <Link className="sr-link" href={recordUrl({q:"",role:"all",roles:[],period:"",status:"all"},1)}>Clear list filters</Link></div>:null}
@@ -45,14 +45,14 @@ export default async function AnimePeople({searchParams}:{searchParams:Promise<C
      {d.period?<input type="hidden" name="period" value={d.period}/>:null}
      <label>Search by name<input type="search" name="q" defaultValue={d.q} placeholder="Find an account" maxLength={60}/></label>
      <label>Sign-in access<select name="status" defaultValue={d.status}>
-      <option value="all">All accounts</option><option value="active">Allowed</option><option value="suspended">Suspended</option>
+      <option value="all">All accounts</option><option value="active">Not suspended</option><option value="suspended">Suspended</option>
      </select></label>
      <SubmitButton label="Search" pendingLabel="Searching..."/>
     </Form>
     <div className="an-person-list">{d.people.map(person=><article className="an-person" key={person.user_id}>
      <div className="an-person-mark" aria-hidden="true">{person.display_name.slice(0,1).toUpperCase()}</div>
      <div className="an-person-info"><strong>{person.display_name}</strong><small>{copy[person.account_type]??person.account_type} · Joined {new Date(person.created_at).toLocaleDateString("en-PH",{timeZone:"Asia/Manila"})}</small></div>
-     <div className="an-person-actions"><span className={person.status==="active"?"an-access-ok":"an-access-off"}>{person.status==="active"?"Sign-in allowed":"Suspended"}</span>
+     <div className="an-person-actions"><span className={person.status==="active"?"an-access-ok":"an-access-off"}>{person.status==="active"?"Not suspended":"Suspended"}</span>
       <Link href={"/admin/accounts/"+person.user_id}>Manage account</Link></div>
     </article>)}</div>
     {!d.people.length&&!d.error&&<p className="an-console-empty">No matching accounts.</p>}
